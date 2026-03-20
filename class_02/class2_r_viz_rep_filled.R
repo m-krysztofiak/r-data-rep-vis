@@ -77,16 +77,14 @@ head(data_neuro)
 #####BARPLOT & FACETS#####
 
 #what's the distribution of extraversion scores? 
-#how can we check it with ggplot?
+#(step 1) how can we check it with ggplot?
 ggplot(data = data_extra, aes(x = extraversion)) + geom_bar()
 
-#how can we see the distribution in volunteers and non-volunteers?
-#facet_wrap
+#(step 2) distribution in volunteers and non-volunteers?
 ggplot(data = data_extra, aes(x = extraversion)) + geom_bar() +
   facet_wrap(~volunteer)
 
-#facet_grid for two variables: sex and volunteer
-#rows ~ columns
+#(step 3) distribution in volunteers and non-volunteers and males and females?
 ggplot(data = data_extra, aes(x = extraversion)) + geom_bar() +
   facet_grid(sex~volunteer)
 
@@ -106,31 +104,25 @@ data %>% group_by(volunteer, sex) %>%
   summarise(n(), mean = mean(extraversion), sd(extraversion))
 
 ####TWO GEOMS: BOXPLOT and SCATTERPLOT####
+#(step 1) simple boxplot
 ggplot(data = data_extra, aes(x = volunteer, y = extraversion)) +
   geom_boxplot()
 
-#let's add another layer: geom_point
+#(step 2) add another layer: geom_point
 ggplot(data = data_extra, aes(x = volunteer, y = extraversion)) +
   geom_boxplot() + geom_point()
 
-#why are there so few data points? We have 1421 observations.
-#what's the default position for geom_point?
-#why it could be useful to change it in this case?
-
+#(step 3) display all datapoints (position = jitter)
 ggplot(data = data_extra, aes(x = volunteer, y = extraversion)) +
   geom_boxplot() + geom_point(position = "jitter")
 
-#We can also change the amount of jitter of data points 
-#default is 0.4
-#let's also make the boxes transparent
-
+#(step 4) change the amount of jitter (default = 0.4)
+#(step 5) make the boxes transparent, supress outlier display
 ggplot(data = data_extra, aes(x = volunteer, y = extraversion)) +
   geom_boxplot(fill = NA, outlier.shape = NA) + 
   geom_point(position = position_jitter(width = 0.3, heigh = 0.5))
 
-#we can also use a special geom
-#geom_jitter
-#you can control the size of the data points too!
+#(step 6) geom_jitter() and change datapoints' size
 ggplot(data = data_extra, aes(x = volunteer, y = extraversion)) +
   geom_boxplot(fill = NA, outlier.shape = NA) +
   geom_boxplot() + geom_jitter(width = 0.3, height = 0.5, size = 1)
@@ -336,7 +328,6 @@ solution
 
 ggsave("class2_solution.png", solution, dpi = 320, 
        width = 4.5, height = 5)
-
 
 ####COLORBLIND CHECK####
 #https://jakubnowosad.com/colorblindcheck/
