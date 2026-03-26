@@ -1,0 +1,148 @@
+---
+title: "GAPMINDER: Life Expectancy Comparisons"
+author: "Magdalena Krysztofiak"
+date: "2026-03-25"
+output: html_document
+---
+
+FREE DATA FROM WORLD BANK VIA GAPMINDER.ORG, CC-BY LICENSE
+<https://www.gapminder.org/>
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set( #global chunk options
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+) #show only output, supress warning and messages
+library(readr)
+library(tidyverse)
+#install.packages("effsize")
+library(effectsize)
+```
+
+```{r data, include = FALSE}
+read_csv("gapminder.csv") -> gapminder
+```
+
+### Filter 1952
+
+Let's select data only for the year 1952.
+
+Options:
+
+- "==" equal to, 
+- "!=" not equal to 
+- "<" less than, 
+- "<=" less or equal to, 
+- ">" more, 
+- ">=" more or equal to 
+- "&" and, 
+- "|" or
+- %in% membership operator, is x in y
+
+```{r filter-gapminder}
+
+```
+
+### Explore
+
+Let's explore distrubution of lifeExp (numeric variable)
+in our data for 1952
+
+####  Histogram
+
+First, histogram...
+
+```{r histogram}
+
+```
+
+...we can adjust the number (bins) or the width of the bins (binwidth)
+Binwidth is measured in the units of x variable.
+
+```{r histogram-bins}
+
+```
+
+Practice 1:
+How to show the distrubution of lifeExp on each continent?
+
+```{r practice-1}
+
+```
+
+####  Barplot
+
+Why is it not working?
+
+```{r barplot-1}
+
+```
+
+Observations are binned 
+and frequency in each bin is mostly = 1
+
+```{r group-size}
+
+```
+
+What if we round the values?
+
+```{r barplot-2}
+
+```
+
+###  Density plot
+
+We can see the shape of the distribution,
+it's not affected by the number of bins.
+
+```{r density-plot}
+
+```
+
+### Compare life expectancy between Asia and Europe in 2002.
+
+Practice 2: 
+Make a new df with rows for Asia or Europe and the year 2002.
+
+Options:
+
+- "==" equal to, 
+- "!=" not equal to 
+- "<" less than, 
+- "<=" less or equal to, 
+- ">" more, 
+- ">=" more or equal to 
+- "&" and, 
+- "|" or
+- %in% membership operator, is x in y
+
+```{r filter-continents-year}
+
+```
+
+We will compare life expectancy between Asia and Europe in 2002.
+
+What would be the best way to visualize the difference 
+between Asia and Europe in life expectancy?
+
+```{r visualize}
+
+```
+
+Summary of life expectancy for Asia and Europe:
+*How can we get summary statistics (n, mean, sd, range) for each continent?*
+
+```{r summarize}
+
+```
+
+We will compare life expectancy with Wilcoxon test
+because the variable is not normally distrubuted.
+
+We can check the effect size (useful for broader interpretation in this case).
+
+```{r compare}
+
+```
