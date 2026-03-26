@@ -9,14 +9,14 @@ library(ggthemes) #extra themes, scales and geoms for ggplot2
 library(viridis) #color scales
 
 ####IMPORT THE DATASETS####
-cowles <- read_csv("class_02/cowles.csv")
+cowles <- read_csv("class_03/Cowles.csv")
 
 #FREE DATA FROM WORLD BANK VIA GAPMINDER.ORG
 #only for 2007
 gapminder_07 <- read_csv("class_03/gapminder_2007.csv")
 
 ####What's wrong with this code?####
-ggplot(gapminder_07, 
+ggplot(cowles, 
        aes(x = volunteer, y = extraversion)) +
   geom_jitter(color = sex, size = 1) +
   geom_boxplot(fill = NA, outlier.shape = NA) +
