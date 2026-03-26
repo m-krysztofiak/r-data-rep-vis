@@ -1,0 +1,164 @@
+---
+title: "GAPMINDER: Life Expectancy Comparisons"
+author: "Magdalena Krysztofiak"
+date: "2026-03-25"
+output: html_document
+---
+
+FREE DATA FROM WORLD BANK VIA GAPMINDER.ORG, CC-BY LICENSE
+<https://www.gapminder.org/>
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set( #global chunk options
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+) #show only output, supress warning and messages
+library(readr)
+library(tidyverse)
+#install.packages("effsize")
+library(effectsize)
+```
+
+```{r data, include = FALSE}
+gapminder <- read_csv("gapminder.csv")
+```
+
+### Filter 1952
+
+Let's select data only for the year 1952.
+
+Options:
+
+- "==" equal to, 
+- "!=" not equal to 
+- "<" less than, 
+- "<=" less or equal to, 
+- ">" more, 
+- ">=" more or equal to 
+- "&" and, 
+- "|" or
+- %in% membership operator, is x in y
+
+```{r filter-gapminder}
+gapminder %>%
+  filter(year == 1952) -> gapminder_52
+```
+
+### Explore
+
+Let's explore distrubution of lifeExp (numeric variable) in our data for 1952
+
+####  Histogram
+
+First, histogram...
+
+```{r histogram}
+ggplot(gapminder_52, aes(x = lifeExp)) + geom_histogram()
+```
+
+...we can adjust the number (bins) or the width of the bins (binwidth)
+Binwidth is measured in the units of x variable.
+
+```{r histogram-bins}
+ggplot(gapminder_52, aes(x = lifeExp)) + 
+  geom_histogram(binwidth = 1)
+```
+
+Practice 1:
+How to show the distrubution of lifeExp on each continent?
+
+```{r practice-1}
+ggplot(gapminder_52, aes(x = lifeExp)) + 
+  geom_histogram() +
+  facet_wrap(~continent)
+```
+
+####  Barplot
+
+Why is it not working?
+
+```{r barplot-1}
+ggplot(gapminder, aes(x = lifeExp)) + geom_bar()
+```
+
+Observations are binned 
+and frequency in each bin is mostly = 1
+
+```{r group-size}
+gapminder %>% group_by(lifeExp) %>% summarise(n())
+```
+
+What if we round the values?
+
+```{r barplot-2}
+gapminder %>%
+  mutate(lifeExp_rounded = round(lifeExp)) %>%
+  ggplot(aes(x = lifeExp_rounded)) + geom_bar()
+```
+
+###  Density plot
+
+We can see the shape of the distribution,
+it's not affected by the number of bins.
+
+```{r density-plot}
+ggplot(gapminder_52, aes(x = lifeExp)) + 
+  geom_density(adjust = 0.5)
+```
+
+### Compare life expectancy between Asia and Europe in 2002.
+
+Practice 2: 
+Make a new df with rows for Asia or Europe and the year 2002.
+
+Options:
+
+- "==" equal to, 
+- "!=" not equal to 
+- "<" less than, 
+- "<=" less or equal to, 
+- ">" more, 
+- ">=" more or equal to 
+- "&" and, 
+- "|" or
+- %in% membership operator, is x in y
+
+```{r filter-continents-year}
+gapminder %>% 
+  filter(year == 2002, 
+           continent %in% c("Asia","Europe")) -> gapminder_filtered
+```
+
+We will compare life expectancy between Asia and Europe in 2002.
+
+What would be the best way to visualize the difference 
+between Asia and Europe in life expectancy?
+
+```{r visualize}
+gapminder_filtered %>% ggplot(aes(continent, lifeExp)) + 
+  geom_boxplot()
+```
+
+Summary of life expectancy for Asia and Europe:
+*How can we get summary statistics (n, mean, sd, range) for each continent?*
+
+```{r summarize}
+gapminder_filtered %>%
+  group_by(continent) %>%
+  summarise(n = n(), 
+            median = median(lifeExp),
+            mean = mean(lifeExp), 
+            sd = sd(lifeExp), 
+            min = min(lifeExp), 
+            max = max(lifeExp))
+```
+We will compare life expectancy with Wilcoxon test
+because the variable is not normally distrubuted.
+
+We can check the effect size (useful for broader interpretation in this case).
+
+```{r compare}
+wilcox.test(lifeExp ~ continent, data = gapminder_filtered)
+rank_biserial(lifeExp ~ continent, data = gapminder_filtered)
+```
